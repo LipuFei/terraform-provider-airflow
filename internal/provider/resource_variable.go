@@ -27,6 +27,10 @@ func resourceVariable() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -37,11 +41,13 @@ func resourceVariableCreate(ctx context.Context, d *schema.ResourceData, m inter
 
 	key := d.Get("key").(string)
 	val := d.Get("value").(string)
+	description := d.Get("description").(string)
 	varApi := client.VariableApi
 
 	_, _, err := varApi.PostVariables(pcfg.AuthContext).Variable(airflow.Variable{
-		Key:   &key,
-		Value: &val,
+		Key:         &key,
+		Value:       &val,
+		Description: *airflow.NewNullableString(&description),
 	}).Execute()
 	if err != nil {
 		return diag.Errorf("failed to create variable `%s` from Airflow: %s", key, err)
@@ -66,6 +72,7 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 
 	d.Set("key", variable.Key)
 	d.Set("value", variable.Value)
+	d.Set("description", variable.Description)
 
 	return nil
 }
@@ -75,10 +82,12 @@ func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, m inter
 	client := pcfg.ApiClient
 
 	val := d.Get("value").(string)
+	description := d.Get("description").(string)
 	key := d.Id()
 	_, _, err := client.VariableApi.PatchVariable(pcfg.AuthContext, key).Variable(airflow.Variable{
-		Key:   &key,
-		Value: &val,
+		Key:         &key,
+		Value:       &val,
+		Description: *airflow.NewNullableString(&description),
 	}).Execute()
 	if err != nil {
 		return diag.Errorf("failed to update variable `%s` from Airflow: %s", key, err)

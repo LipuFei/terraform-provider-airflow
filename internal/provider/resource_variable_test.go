@@ -24,6 +24,7 @@ func TestAccAirflowVariable_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "key", rName),
 					resource.TestCheckResourceAttr(resourceName, "value", rName),
+					resource.TestCheckResourceAttr(resourceName, "description", rName),
 				),
 			},
 			{
@@ -36,6 +37,7 @@ func TestAccAirflowVariable_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "key", rName),
 					resource.TestCheckResourceAttr(resourceName, "value", rNameUpdated),
+					resource.TestCheckResourceAttr(resourceName, "description", rNameUpdated),
 				),
 			},
 		},

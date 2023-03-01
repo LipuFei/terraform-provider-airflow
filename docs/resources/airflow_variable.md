@@ -14,8 +14,9 @@ Provides an Airflow variable.
 
 ```hcl
 resource airflow_variable "example" {
-  key   = "example"
-  value = "example"
+  key         = "example"
+  value       = "example"
+  description = "example"
 }
 ```
 
@@ -25,6 +26,7 @@ The following arguments are supported:
 
 * `key` - (Required) The variable key.
 * `value` - (Required) The variable value.
+* `description` - (Optional) The variable description.
 
 ## Attributes Reference
 
